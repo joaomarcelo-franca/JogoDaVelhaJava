@@ -1,0 +1,79 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Jogodavelha {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        char jogador = 'X';
+        int j = 0;
+        int coluna, linha;
+        boolean vencedor = false;
+        System.out.println("Bem Vindo ao Jogo da Velha!!!!");
+        char[][] mesa = {{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+
+        do {
+            try {
+                System.out.println("    0   1   2");
+                for (int i = 0; i < mesa.length; i++) {
+                    System.out.printf("%s %d %c %s %c %s %c \n", " ", i, mesa[i][0], "|", mesa[i][1], "|", mesa[i][2]);
+                }
+
+                if (j == 9) {
+                    System.out.println("O Jogo deu velha! Nenhum jogador venceu");
+                    break;
+                }
+
+                System.out.println("Vez do jogador: " + jogador);
+                System.out.print("Digite a coluna: ");
+                coluna = scanner.nextInt();
+                System.out.print("Digite a linha: ");
+                linha = scanner.nextInt();
+
+                if (mesa[linha][coluna] == 'X' || mesa[linha][coluna] == '0') {
+                    System.out.println("Posição ocupada, jogue novamente");
+                } else {
+                    mesa[linha][coluna] = jogador;
+                    j++;
+                    vencedor = verificarVencedor(mesa, jogador);
+                    if (vencedor) {
+                        System.out.printf("O Vencedor da rodada é o jogador: %c", jogador);
+                        break;
+                    }
+                    jogador = (jogador == 'X') ? 'O' : 'X';
+                }
+
+            } catch (InputMismatchException | ArrayIndexOutOfBoundsException e) {
+                System.out.println("O que você nos informou não é uma coluna ou linha válida.");
+                System.out.println("Colunas e linhas válidas: 0, 1, 2");
+                System.out.println("Jogada Inválida");
+                System.out.println("Jogue novamente!");
+            }
+        } while (!vencedor);
+    }
+
+    private static boolean verificarVencedor(char[][] mesa, char jogador) {
+        // Verificar linhas
+        for (int i = 0; i < 3; i++) {
+            if (mesa[i][0] == jogador && mesa[i][1] == jogador && mesa[i][2] == jogador) {
+                return true;
+            }
+        }
+
+        // Verificar colunas
+        for (int j = 0; j < 3; j++) {
+            if (mesa[0][j] == jogador && mesa[1][j] == jogador && mesa[2][j] == jogador) {
+                return true;
+            }
+        }
+
+        // Verificar diagonais
+        if (mesa[0][0] == jogador && mesa[1][1] == jogador && mesa[2][2] == jogador) {
+            return true;
+        }
+        if (mesa[0][2] == jogador && mesa[1][1] == jogador && mesa[2][0] == jogador) {
+            return true;
+        }
+
+        return false;
+    }
+}
